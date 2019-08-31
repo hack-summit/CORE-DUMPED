@@ -1,0 +1,130 @@
+{% extends "user_account_layout.html" %}
+{% block content %}
+    <h1> Missing </h1>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+        <head>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="http://www.expertphp.in/js/jquery.form.js"></script>
+    <script>
+    function preview_images() 
+    {
+     var total_file=document.getElementById("images").files.length;
+     for(var i=0;i<total_file;i++)
+     {
+      $('#image_preview').append("<article class='col-xs-6'><img  style='margin-left:10px' class='img-responsive img-thumbnail d-block' src='"+URL.createObjectURL(event.target.files[i])+"'></article>");
+     }
+    }
+    </script>
+    <script> 
+     $('#add_more').click(function() {
+              "use strict";
+              $(this).before($("<div/>", {
+                id: 'filediv'
+              }).fadeIn('slow').append(
+                $("<input/>", {
+                  name: 'file[]',
+                  type: 'file',
+                  id: 'file',
+                  multiple: 'multiple',
+                  accept: 'image/*'
+                })
+              ));
+            });
+    
+            $('#upload').click(function(e) {
+              "use strict";
+              e.preventDefault();
+    
+              if (window.filesToUpload.length === 0 || typeof window.filesToUpload === "undefined") {
+                alert("No files are selected.");
+                return false;
+              }
+    
+            });
+    
+            deletePreview = function (ele, i) {
+              "use strict";
+              try {
+                $(ele).parent().remove();
+                window.filesToUpload.splice(i, 1);
+              } catch (e) {
+                console.log(e.message);
+              }
+            }
+    
+            $("#file").on('change', function() {
+              "use strict";
+    
+              // create an empty array for the files to reside.
+              window.filesToUpload = [];
+    
+              if (this.files.length >= 1) {
+                $("[id^=previewImg]").remove();
+                $.each(this.files, function(i, img) {
+                  var reader = new FileReader(),
+                    newElement = $("<div id='previewImg" + i + "' class='previewBox'><img /></div>"),
+                    deleteBtn = $("<span class='delete' onClick='deletePreview(this, " + i + ")'>X</span>").prependTo(newElement),
+                    preview = newElement.find("img");
+    
+                  reader.onloadend = function() {
+                    preview.attr("src", reader.result);
+                    preview.attr("alt", img.name);
+                  };
+    
+                  try {
+                    window.filesToUpload.push(document.getElementById("file").files[i]);
+                  } catch (e) {
+                    console.log(e.message);
+                  }
+    
+                  if (img) {
+                    reader.readAsDataURL(img);
+                  } else {
+                    preview.src = "";
+                  }
+    
+                  newElement.appendTo("#filediv");
+                });
+              }
+            });
+    </script>
+    </head>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <form action="/uploading" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <div class="custom-file">
+                        <input type="file" class="custom-file-input " id="images" name="images[]" onchange="preview_images();" multiple/>
+                        <label class="custom-file-label" for="images">select image</label>
+                        </div>
+                    </div>
+                    <div>
+                    <input type="submit" class="btn btn-primary" name='submit_image' value="Upload Multiple Image"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row" id="image_preview"></div>
+ <!-- <div class="container">
+        <div class="row">
+            <div class="col">
+                <form action="/post" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                      <label>Select image</label>
+                      <div class="custom-file">
+                        <input type="file" class="custom-file-input" name="image" id="image">
+                        <label class="custom-file-label" for="image">select image</label>
+                      </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </form>
+            </div>
+        </div> -->
+      </div>
+{% endblock content %}

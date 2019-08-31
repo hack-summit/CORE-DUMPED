@@ -1,0 +1,9 @@
+<html>
+    <form method="POST" action="{{url_for('tobackend')}}" enctype="multipart/form-data">
+    {% for i in range(0,le) %}
+    <img src="/file/{{i}}">
+    <input type="number" name="face{{i}}" placeholder="Select Face of {{i}}"> 
+    {%endfor%}
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</html>
